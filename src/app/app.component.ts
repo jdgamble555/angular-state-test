@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { DataService } from './data.service';
 
@@ -7,16 +7,10 @@ import { DataService } from './data.service';
   standalone: true,
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styles: [],
-  /*providers: [
-    {
-      provide: APP_INITIALIZER,
-      multi: true,
-      useFactory: () => DataService
-    }
-  ]*/
+  styles: []
 })
 export class AppComponent {
-  data = inject(DataService);
+  data = inject(DataService).value;
   title = 'angular-test';
 }
+

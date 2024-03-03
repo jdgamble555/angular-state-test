@@ -1,27 +1,40 @@
-import { Injectable, inject } from '@angular/core';
-import { StateService } from './state.service';
+import { Injectable, TransferState, inject, makeStateKey } from '@angular/core';
 
+type PageLoad = Awaited<ReturnType<typeof pageServerLoad>>;
+
+// Abstract
 @Injectable()
 export abstract class DataService {
-    abstract get(): string
+    abstract value: PageLoad | null;
+    abstract load(): Promise<void>;
 }
 
+// Server
 @Injectable()
 export class DataServiceServer extends DataService {
-    state = inject(StateService);
-    get(): string {        
-        const test = 'server-data-performed-with-secret-tokens';
-        this.state.saveState('test', test);
-        return test;
+    state = inject(TransferState);
+    value: PageLoad | null = null;
+    async load() {
+        const data = await pageServerLoad();
+        this.state.set(makeStateKey<PageLoad>(key), data);
+        this.value = data;
     }
 }
 
+// Browser
 @Injectable()
 export class DataServiceBrowser extends DataService {
-    state = inject(StateService);
-    get(): string {
-        const test = this.state.getState<string>('test');
-        console.log(test);
-        return test;
+    state = inject(TransferState);
+    value: PageLoad | null = null;
+    async load() {
+        const data = this.state.get(makeStateKey<PageLoad>(key), null);
+        this.value = data;
     }
+}
+
+// Config
+const key = 'test';
+
+async function pageServerLoad() {
+    return 'Random Number From Server: ' + Math.random();
 }
