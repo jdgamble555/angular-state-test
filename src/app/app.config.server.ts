@@ -1,15 +1,12 @@
 import { mergeApplicationConfig, ApplicationConfig } from '@angular/core';
 import { provideServerRendering } from '@angular/platform-server';
 import { appConfig } from './app.config';
-import { DataService, DataServiceServer } from './data.service';
+import { providePageServerLoad } from './lib/provide-server-load';
 
 const serverConfig: ApplicationConfig = {
   providers: [
     provideServerRendering(),
-    {
-      provide: DataService,
-      useClass: DataServiceServer
-    }
+    providePageServerLoad()
   ]
 };
 

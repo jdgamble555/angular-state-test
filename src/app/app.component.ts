@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { DataService } from './data.service';
+import { PageLoad } from './lib/page-load';
+
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,7 @@ import { DataService } from './data.service';
   styles: []
 })
 export class AppComponent {
-  data = inject(DataService).value;
+  data = inject(PageLoad).data?.text
   title = 'angular-test';
 }
 
